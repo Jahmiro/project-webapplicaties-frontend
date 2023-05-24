@@ -1,4 +1,39 @@
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+
+const users = [
+  { id: 1, name: "John", email: "user1@gmail.com", password: "123456" },
+  { id: 2, name: "Pete", email: "user2@gmail.com", password: "123456" },
+  { id: 3, name: "Mary", email: "user3@gmail.com", password: "123456" },
+];
+
 export const LoginContent = () => {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const navigate = useNavigate();
+  
+  useEffect(() => {
+    const token = localStorage.getItem("fakeToken");
+    if (token) {
+      setIsLoggedIn(true);
+    }
+  }, []);
+
+
+  const handleSubmit = (e: any) => {
+    e.preventDefault();
+    const user = users.find(
+      (user) => user.email === email && user.password === password
+    );
+    if (user) {
+      localStorage.setItem("fakeToken", "123456789");
+      navigate("/");
+      console.log("login succes");
+    } else {
+      console.log("login failed");
+    }
+  };
   return (
     <>
       <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 mb-40 lg:px-8">
@@ -9,7 +44,7 @@ export const LoginContent = () => {
         </div>
 
         <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
-          <form className="space-y-6" action="#" method="POST">
+          <form className="space-y-6" onClick={handleSubmit}>
             <div>
               <label
                 htmlFor="email"
@@ -24,6 +59,7 @@ export const LoginContent = () => {
                   type="email"
                   autoComplete="email"
                   required
+                  onChange={(e) => setEmail(e.target.value)}
                   className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-red-600 sm:text-sm sm:leading-6"
                 />
               </div>
@@ -44,6 +80,7 @@ export const LoginContent = () => {
                   name="password"
                   type="password"
                   autoComplete="current-password"
+                  onChange={(e) => setPassword(e.target.value)}
                   required
                   className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-red-600 sm:text-sm sm:leading-6"
                 />

@@ -4,6 +4,7 @@ import {
   ArchiveBoxIcon,
 } from "@heroicons/react/20/solid";
 import earth from "../../../assets/earth.jpeg";
+import realtimedata from "../../../assets/realtimedata.png";
 
 export const HomeContent = () => {
   return (
@@ -116,6 +117,15 @@ export const HomeContent = () => {
                   Get started <span aria-hidden="true">→</span>
                 </a>
               </div>
+            </div>
+            <div className="relative mt-16 h-80 lg:mt-8">
+              <img
+                className="absolute left-0 top-0 w-[57rem] max-w-none rounded-md bg-white/5 ring-1 ring-white/10"
+                src={realtimedata}
+                alt="App screenshot"
+                width={1824}
+                height={1080}
+              />
             </div>
           </div>
         </div>

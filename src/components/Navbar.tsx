@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Dialog } from "@headlessui/react";
 import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
 import { Link, useLocation } from "react-router-dom";
@@ -6,6 +6,19 @@ import { Link, useLocation } from "react-router-dom";
 export const Navbar = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const location = useLocation();
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  useEffect(() => {
+    const token = localStorage.getItem("fakeToken");
+    if (token) {
+      setIsLoggedIn(true);
+    }
+  }, []);
+
+  const handleLogout = () => {
+    localStorage.removeItem("fakeToken");
+    setIsLoggedIn(false);
+  };
 
   return (
     <header className="bg-white">
@@ -36,14 +49,48 @@ export const Navbar = () => {
           >
             Home
           </Link>
-          <Link
-            className={`text-sm font-semibold leading-6 ${
-              location.pathname === "/login" ? "text-red-600" : "text-gray-900"
-            } hover:text-red-600`}
-            to={"/login"}
-          >
-            Log in <span aria-hidden="true">&rarr;</span>
-          </Link>
+          {isLoggedIn ? (
+            <>
+              <Link
+                className={`text-sm mr-4 font-semibold leading-6 ${
+                  location.pathname === "/windspeed"
+                    ? "text-red-600"
+                    : "text-gray-900"
+                } hover:text-red-600`}
+                to={"/windspeed"}
+              >
+                Wind Speed
+              </Link>
+              <Link
+                className={`text-sm mr-4 font-semibold leading-6 ${
+                  location.pathname === "/airpressure"
+                    ? "text-red-600"
+                    : "text-gray-900"
+                } hover:text-red-600`}
+                to={"/airpressure"}
+              >
+                Air Pressure
+              </Link>
+
+              <button
+                className={`text-sm font-semibold leading-6 text-gray-900 hover:text-red-600`}
+                onClick={handleLogout}
+              >
+                Logout
+              </button>
+            </>
+          ) : (
+            <Link
+              className={`text-sm font-semibold leading-6 ${
+                location.pathname === "/login"
+                  ? "text-red-600"
+                  : "text-gray-900"
+              } hover:text-red-600`}
+              to={"/login"}
+            >
+              Log in <span aria-hidden="true">&rarr;</span>
+            </Link>
+          )}
         </div>
       </nav>
       <Dialog
@@ -78,14 +125,47 @@ export const Navbar = () => {
                 >
                   Home
                 </Link>
-                <Link
-                  className={`-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 ${
-                    location.pathname === "/login" ? "text-red-600" : "text-gray-900"
-                  } hover:text-red-600`}
-                  to={"/login"}
-                >
-                  Log in
-                </Link>
+                {isLoggedIn ? (
+                  <>
+                    <Link
+                      className={`-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 ${
+                        location.pathname === "/windspeed"
+                          ? "text-red-600"
+                          : "text-gray-900"
+                      } hover:text-red-600`}
+                      to={"/windspeed"}
+                    >
+                      windspeed
+                    </Link>
+                    <Link
+                      className={`-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 ${
+                        location.pathname === "/airpressure"
+                          ? "text-red-600"
+                          : "text-gray-900"
+                      } hover:text-red-600`}
+                      to={"/airpressure"}
+                    >
+                      Air Pressure
+                    </Link>
+                    <button
+                      className={`text-sm font-semibold leading-6 text-gray-900 hover:text-red-600`}
+                      onClick={handleLogout}
+                    >
+                      Logout
+                    </button>
+                  </>
+                ) : (
+                  <Link
+                    className={`-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 ${
+                      location.pathname === "/login"
+                        ? "text-red-600"
+                        : "text-gray-900"
+                    } hover:text-red-600`}
+                    to={"/login"}
+                  >
+                    Log in
+                  </Link>
+                )}
               </div>
             </div>
           </div>
