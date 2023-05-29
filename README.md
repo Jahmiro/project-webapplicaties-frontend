@@ -1,3 +1,9 @@
+# to-do 
+- er moet een inlog systeem komen voor de werknemers van dat bedrijf.
+- er moet pagina komen met de windsnelheid en wind richting van alle weerstationnen die in de buurt zijn van Mogadishu (1500km)
+- er moet een pagina komen met de top 10 pieken van de lucht druk in somalie en etheopie.
+- er moet een mogelijk zijn om data te downloaden via een xml bestand.
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).

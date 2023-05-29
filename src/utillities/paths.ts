@@ -4,6 +4,8 @@ const paths = {
   root: p("/", {
     home: p("/", {}),
     login: p("/login", {}),
+    windspeed: p("/windspeed", {}),
+    airpressure: p("/airpressure", {}),
   }),
 };
 
