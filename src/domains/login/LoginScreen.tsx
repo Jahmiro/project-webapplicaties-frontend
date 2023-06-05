@@ -7,7 +7,9 @@ export const LoginScreen = () => {
     <div>
       <Navbar />
       <LoginContent />
-      <Footer />
+      <div className="absolute w-full bottom-0">
+        <Footer />
+      </div>
     </div>
   );
 };

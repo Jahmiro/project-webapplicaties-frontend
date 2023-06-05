@@ -1,12 +1,13 @@
 import { useEffect, useState } from "react";
 import { Dialog } from "@headlessui/react";
 import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 
 export const Navbar = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const location = useLocation();
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const token = localStorage.getItem("fakeToken");
@@ -18,6 +19,7 @@ export const Navbar = () => {
   const handleLogout = () => {
     localStorage.removeItem("fakeToken");
     setIsLoggedIn(false);
+    navigate("/login");
   };
 
   return (

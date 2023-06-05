@@ -7,7 +7,9 @@ export const WindSpeedScreen = () => {
     <div>
       <Navbar />
       <WindSpeedContent />
-      <Footer />
+      <div>
+        <Footer />
+      </div>
     </div>
   );
 };
