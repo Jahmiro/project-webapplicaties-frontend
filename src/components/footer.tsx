@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Dialog } from "@headlessui/react";
 import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
+import somfuel from "../../src/assets/somfuelicon.jpeg";
 
 export const Footer = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -11,7 +12,7 @@ export const Footer = () => {
         <div className="mb-6 md:mb-0">
           <a href="https://flowbite.com/" className="flex items-center">
             <span className="text-white self-center text-2xl font-semibold whitespace-nowrap">
-              Logo
+              Somali Fuel Company
             </span>
           </a>
         </div>

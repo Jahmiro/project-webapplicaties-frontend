@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import { Dialog } from "@headlessui/react";
 import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
 import { Link, useLocation, useNavigate } from "react-router-dom";
+import somfuel from "../../src/assets/somfuelicon.jpeg";
+
 
 export const Navbar = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -30,7 +32,7 @@ export const Navbar = () => {
       >
         <div className="flex lg:flex-1">
           <Link to={"/"}>
-            <p>Logo</p>
+            <img src={somfuel} alt="" />
           </Link>
         </div>
         <div className="flex lg:hidden">
@@ -52,7 +54,7 @@ export const Navbar = () => {
             Home
           </Link>
           {isLoggedIn ? (
-            <>
+            <div>
               <Link
                 className={`text-sm mr-4 font-semibold leading-6 ${
                   location.pathname === "/windspeed"
@@ -80,7 +82,7 @@ export const Navbar = () => {
               >
                 Logout
               </button>
-            </>
+            </div>
           ) : (
             <Link
               className={`text-sm font-semibold leading-6 ${
@@ -105,7 +107,7 @@ export const Navbar = () => {
         <Dialog.Panel className="fixed inset-y-0 right-0 z-10 w-full overflow-y-auto bg-white px-6 py-6 sm:max-w-sm sm:ring-1 sm:ring-gray-900/10">
           <div className="flex items-center justify-between">
             <Link className="-m-1.5 p-1.5" to={""}>
-              <p className="sm:hidden">Logo</p>
+            <img className="sm:hidden" src={somfuel} alt="" />
             </Link>
             <button
               type="button"
