@@ -1,38 +1,49 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-const users = [
-  { id: 1, name: "John", email: "user1@gmail.com", password: "123456" },
-  { id: 2, name: "Pete", email: "user2@gmail.com", password: "123456" },
-  { id: 3, name: "Mary", email: "user3@gmail.com", password: "123456" },
-];
-
 export const LoginContent = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const navigate = useNavigate();
-  
+
   useEffect(() => {
-    const token = localStorage.getItem("fakeToken");
+    const token = localStorage.getItem("token");
     if (token) {
       setIsLoggedIn(true);
     }
   }, []);
 
-
   const handleSubmit = (e: any) => {
     e.preventDefault();
-    const user = users.find(
-      (user) => user.email === email && user.password === password
-    );
-    if (user) {
-      localStorage.setItem("fakeToken", "123456789");
-      navigate("/");
-      console.log("login succes");
-    } else {
-      console.log("login failed");
-    }
+
+    const submitData = {
+      username: email,
+      password: password,
+    };
+
+    fetch("http://localhost:9090/api/login", {
+      method: "post",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(submitData),
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("not succesfull");
+        }
+        return response.json();
+      })
+      .then((data) => {
+        console.log("login succes");
+        const token = data.token;
+        localStorage.setItem("token", token);
+        navigate("/");
+      })
+      .catch((error) => {
+        console.error(error);
+      });
   };
   return (
     <>

@@ -1,23 +1,40 @@
 import React, { useEffect, useState } from "react";
-import { weatherData } from "../../../utillities/weatherData";
 import { Marker, Map, Popup } from "react-map-gl";
 import "mapbox-gl/dist/mapbox-gl.css";
 import mapPin from "../../../assets/mapPin.svg";
 import arrowUp from "../../../assets/arrowUp.svg";
-
-const windspeeds: any[] = weatherData;
+import { Link, useLocation } from "react-router-dom";
 
 export const WindSpeedContent = () => {
   const [viewState, setViewState] = useState({
-    latitude: 9.733,
-    longitude: 4,
-    zoom: 5,
+    latitude: 2.4,
+    longitude: 45.3,
+    zoom: 4,
   });
   const [selectedMarker, setSelectedMarker] = useState<any>(null);
+  const [stationData, setStationData] = useState<any[]>([]);
 
   const handleMarkerClick = (marker: any) => {
     setSelectedMarker(marker);
   };
+
+  useEffect(() => {
+    async function fetchData() {
+      try {
+        const response = await fetch(
+          "http://localhost:9090/api/stations/mogadishu-1500km/"
+        );
+        const data = await response.json();
+        setStationData(data);
+      } catch (error) {
+        console.error("Failed to fetch station data:", error);
+      }
+    }
+
+    fetchData();
+  }, []);
+
+  const location = useLocation();
 
   return (
     <div style={{ width: "100%", height: "85vh" }}>
@@ -27,13 +44,13 @@ export const WindSpeedContent = () => {
         mapStyle="mapbox://styles/jah97/cli96xd4w00hs01qydpgr83o0"
         onMove={(evt) => setViewState(evt.viewState)}
       >
-        {windspeeds.map((windspeed) => (
+        {stationData.map((stationData) => (
           <Marker
-            key={windspeed.station.stationId}
-            latitude={windspeed.station.latitude}
-            longitude={windspeed.station.longitude}
+            key={stationData.id}
+            latitude={stationData.latitude}
+            longitude={stationData.longitude}
           >
-            <button onClick={() => handleMarkerClick(windspeed)}>
+            <button onClick={() => handleMarkerClick(stationData)}>
               <img src={mapPin} width={30} height={30} alt="Marker" />
             </button>
           </Marker>
@@ -41,8 +58,8 @@ export const WindSpeedContent = () => {
 
         {selectedMarker ? (
           <Popup
-            latitude={selectedMarker.station.latitude}
-            longitude={selectedMarker.station.longitude}
+            latitude={selectedMarker.latitude}
+            longitude={selectedMarker.longitude}
             onClose={() => {
               setSelectedMarker(null);
             }}
@@ -54,24 +71,21 @@ export const WindSpeedContent = () => {
               <div className="sm:flex sm:items-start">
                 <div className="mt-3 text-center sm:ml-4 sm:mt-0 sm:text-left">
                   <h3 className="text-base font-semibold pb-2 leading-6 text-gray-900">
-                    Station: {selectedMarker.station.stationId}
+                    Station:
+                    <Link
+                      className={`text-sm mr-4 font-semibold leading-6 ${
+                        location.pathname === `/station/${selectedMarker.id}`
+                          ? "text-red-600"
+                          : "text-gray-900"
+                      } hover:text-red-600`}
+                      to={`/station/${selectedMarker.id}`}
+                    >
+                      {selectedMarker.id}
+                    </Link>
                   </h3>
-
-                  <p className="text-sm text-gray-500">
-                    Wind speed: {selectedMarker.station.measurement.WDSP} km/h
-                  </p>
-                  <div className="flex">
-                    <p className="text-sm text-gray-500">Wind direction:</p>
-                    <img
-                      style={{
-                        rotate: `${selectedMarker.station.measurement.WNDDIR}deg`,
-                      }}
-                      src={arrowUp}
-                      width={15}
-                      height={15}
-                      alt="Marker"
-                    />
-                  </div>
+                  <p>longitude: {selectedMarker.longitude}</p>
+                  <p>latitude: {selectedMarker.latitude}</p>
+                  <div className="flex"></div>
                 </div>
               </div>
             </div>

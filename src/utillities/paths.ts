@@ -6,6 +6,7 @@ const paths = {
     login: p("/login", {}),
     windspeed: p("/windspeed", {}),
     airpressure: p("/airpressure", {}),
+    station: p("/station/:id", {}),
   }),
 };
 
