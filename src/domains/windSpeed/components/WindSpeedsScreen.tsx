@@ -4,20 +4,40 @@ import { Marker, Map, Popup } from "react-map-gl";
 import "mapbox-gl/dist/mapbox-gl.css";
 import mapPin from "../../../assets/mapPin.svg";
 import arrowUp from "../../../assets/arrowUp.svg";
+import { api } from "../../../api/api";
 
 const windspeeds: any[] = weatherData;
 
 export const WindSpeedContent = () => {
+  const [stations, setStations] = useState("")
   const [viewState, setViewState] = useState({
     latitude: 9.733,
     longitude: 4,
     zoom: 5,
   });
   const [selectedMarker, setSelectedMarker] = useState<any>(null);
-
   const handleMarkerClick = (marker: any) => {
     setSelectedMarker(marker);
   };
+
+  const apiKey = process.env.REACT_APP_API_KEY;
+
+  useEffect(() => {
+    const getStations = async () => {
+      try {
+        const response = await api.get('contract/stations', {
+          headers: {
+            Authorization: `Bearer ${apiKey}`,
+          },
+        });
+        setStations(response.data)
+        console.log(response.data);
+      } catch (err) {
+        console.error(err);
+      }
+    };
+    getStations();
+  }, []);
 
   return (
     <div style={{ width: "100%", height: "85vh" }}>
