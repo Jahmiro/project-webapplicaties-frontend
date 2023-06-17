@@ -118,7 +118,7 @@ export const StationData = () => {
     <div>
       <button
         onClick={DownloadXML}
-        className="mx-8 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+        className="mx-8 bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
       >
         download XML
       </button>
