@@ -3,16 +3,17 @@ import { Marker, Map, Popup } from "react-map-gl";
 import "mapbox-gl/dist/mapbox-gl.css";
 import mapPin from "../../../assets/mapPin.svg";
 import arrowUp from "../../../assets/arrowUp.svg";
+import { api } from "../../../api/api";
 import { Link, useLocation } from "react-router-dom";
 
 export const WindSpeedContent = () => {
+  const [stations, setStations] = useState("");
   const [viewState, setViewState] = useState({
     latitude: 2.4,
     longitude: 45.3,
     zoom: 4,
   });
   const [selectedMarker, setSelectedMarker] = useState<any>(null);
-  const [stationData, setStationData] = useState<any[]>([]);
 
   const handleMarkerClick = (marker: any) => {
     setSelectedMarker(marker);
