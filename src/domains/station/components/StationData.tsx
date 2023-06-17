@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { toXML } from "jstoxml";
 
-interface DataItem {
+export interface StationData {
   timestamp: {
     date: string;
     timezone_type: number;
@@ -12,9 +12,9 @@ interface DataItem {
   wind_speed: number;
 }
 
-export const ContentTest = () => {
+export const StationData = () => {
   const { id } = useParams(); // Access the id parameter from the route
-  const [data, setData] = useState<DataItem[]>([]);
+  const [data, setData] = useState<StationData[]>([]);
 
   useEffect(() => {
     const fetchData = async () => {

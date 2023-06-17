@@ -1,12 +1,12 @@
 import { Navbar } from "../../components/Navbar";
 import { Footer } from "../../components/footer";
-import { ContentTest } from "./components/ContentTest";
+import { StationData } from "./components/StationData";
 
 export const StationScreen = () => {
   return (
     <div>
       <Navbar />
-      <ContentTest />
+      <StationData />
       <Footer />
     </div>
   );
