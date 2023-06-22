@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { toXML } from "jstoxml";
 import {
   ResponsiveContainer,
   BarChart,
@@ -9,39 +10,70 @@ import {
   Tooltip,
   Legend,
 } from "recharts";
-import { weatherData } from "../../../utillities/weatherData";
 import Datepicker from "react-tailwindcss-datepicker";
 
-const windspeeds: any[] = weatherData;
-
 export const AirPressureContent = () => {
-  const slpData = windspeeds.map((windspeed) => ({
-    stationId: windspeed.station.stationId,
-    "Air pressure (in hPa)": windspeed.station.measurement.SLP,
-  }));
-
-  const [value, setValue] = useState({
+  const [value, setValue] = useState<{
+    startDate: Date | null;
+    endDate: Date | null;
+  }>({
     startDate: null,
     endDate: null,
   });
 
-  const handleValueChange = (newValue: any) => {
-    const startDate = newValue.startDate ? new Date(newValue.startDate) : null;
-    if (
-      startDate &&
-      startDate >= new Date(new Date().getTime() - 40 * 24 * 60 * 60 * 1000) &&
-      startDate <= new Date()
-    ) {
-      setValue(newValue);
-    } else {
-      setValue((prevValue) => ({
-        ...prevValue,
-        startDate: prevValue.startDate,
-      }));
-    }
+  const [slpData, setSlpData] = useState([]);
+
+  const handleValueChange = (value: any) => {
+    setValue(value);
   };
+
+  useEffect(() => {
+    const fetchData = async () => {
+      if (value.startDate && value.endDate) {
+        console.log(value.startDate);
+        const response = await fetch(
+          `http://localhost:9090/api/top10/airpressure/${value.startDate}`
+        );
+        const data = await response.json();
+        setSlpData(data);
+      }
+    };
+    fetchData();
+  }, [value]);
+
+  function DownloadXML() {
+    fetch(`http://localhost:9090/api/top10/airpressure/${value.startDate}`)
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("not succesfull");
+        }
+        return response.json();
+      })
+      .then((data) => {
+        let filename = `top10_airpressure_peaks_${value.startDate}_data.xml`;
+        let xml = toXML(data);
+
+        var element = document.createElement("a");
+        element.setAttribute(
+          "href",
+          "data:text/plain;charset=utf-8," + encodeURIComponent(xml)
+        );
+        element.setAttribute("download", filename);
+
+        element.style.display = "none";
+        document.body.appendChild(element);
+
+        element.click();
+
+        document.body.removeChild(element);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  }
+
   return (
-    <div className="overflow-hidden	">
+    <div className="overflow-hidden">
       <h2 className="m-8 text-2xl font-semibold text-gray-900">
         Top ten air pressure locations
       </h2>
@@ -56,13 +88,16 @@ export const AirPressureContent = () => {
             value={value}
             onChange={handleValueChange}
             displayFormat="DD-MM-YYYY"
-            minDate={new Date(new Date().getTime() - 40 * 24 * 60 * 60 * 1000)}
+            minDate={new Date(new Date().getTime() - 100 * 24 * 60 * 60 * 1000)}
             maxDate={new Date()}
           />
         </div>
-        <div className="w-full mr-16 flex  self-end justify-end">
-          <button className="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">
-            Download data
+        <div className="w-full mr-16 flex self-end justify-end">
+          <button
+            onClick={DownloadXML}
+            className="mx-8 bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
+          >
+            download XML
           </button>
         </div>
       </div>
@@ -70,7 +105,7 @@ export const AirPressureContent = () => {
         <ResponsiveContainer width="100%" height={500}>
           <BarChart data={slpData}>
             <CartesianGrid opacity={0.5} vertical={false} />
-            <XAxis dataKey="stationId" />
+            <XAxis dataKey="station.id" />
             <YAxis
               type="number"
               domain={[850, 1100]}
@@ -80,7 +115,7 @@ export const AirPressureContent = () => {
             <Tooltip />
             <Legend />
             <Bar
-              dataKey="Air pressure (in hPa)"
+              dataKey="station_air_pressure"
               fill="#dc2626"
               label={{ fill: "#ffffff" }}
             />
